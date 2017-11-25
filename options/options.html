@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TPilet/LuxExpress kasutaja andmed</title>
+    <style>
+        body {
+            padding: 3px;
+        }
+    </style>
+</head>
+<body>
+	<form id="userdata">
+		<fieldset>
+			<legend>TPilet/LuxExpress kasutaja andmed:</legend>
+			<table class="userdata" id="input_table">
+				<tr>
+					<td><label for="FirstName">Eesnimi</label></td>
+					<td><input type="text" id="FirstName"></td>
+				</tr>
+				<tr>
+					<td><label for="LastName">Perenimi</label></td>
+					<td><input type="text" id="LastName"></td>
+				</tr>
+				<tr>
+					<td><label for="Email">Email (kontakt)</label></td>
+					<td><input type="text" id="Email"></td>
+				</tr>
+				<tr>
+					<td><label for="PhonePrefix">Tel suunakood</label></td>
+					<td><input type="text" id="PhonePrefix"></td>
+				</tr>
+				<tr>
+					<td><label for="PhoneNumber">Tel number</label></td>
+					<td><input type="text" id="PhoneNumber"></td>
+				</tr>
+				<tr>
+					<td><label for="DeliverEmailAddress">Email (pileti saatmiseks)</label></td>
+					<td><input type="text" id="DeliverEmailAddress"></td>
+				</tr>
+				<tr>
+					<td><label for="BonusCardNumber">PINS kaardi number</label></td>
+					<td><input type="text" id="BonusCardNumber"></td>
+				</tr>
+			</table>
+		</fieldset>
+	</form>
+
+	<table class="userdata" id="save_table" style="padding-top: 8px">
+		<tr>
+			<td style="width: 100px" ><button id="save">Salvesta</button></td>
+			<td id="status">&nbsp;</td>
+		</tr>
+	</table>
+    <script src="options.js"></script>
+</body>
+</html>
