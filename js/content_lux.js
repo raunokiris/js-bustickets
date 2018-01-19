@@ -30,21 +30,23 @@ if (currentPath.startsWith("/vali-reisijad/")) {
     }
 
     function addNewButton(table, button_id) {
-        table.getElementsByClassName("contacting-options-fields")[0].innerHTML += `
-		<div class="col-xs-12 pad-5-i text-right loadData">
-			<button class="btn pad-0-30 loadData" id="${button_id}" title="Lae andmed" type="button" style="margin-right: 10px">Lae andmed</button>
-		</div>
+        let newButtonDiv = document.createElement('div');
+        newButtonDiv.setAttribute('class', 'col-xs-12 pad-5-i text-right loadData');
+        newButtonDiv.innerHTML += `
+		    <button class="btn pad-0-30 loadData" id="${button_id}"
+		     title="Lae andmed" type="button" style="margin-right: 10px">Lae andmed</button>
 		`;
+        table.getElementsByClassName("contacting-options-fields")[0].appendChild(newButtonDiv);
     }
 
     function linkButtonToLoadData(table, button_id) {
         let button_elem = document.getElementById(button_id);
         button_elem.addEventListener('click', function () {
-            load_data(table)
+            loadData(table)
         }, false);
     }
 
-    function load_data(table) {
+    function loadData(table) {
         chrome.storage.sync.get({
             FirstName: '',
             LastName: '',
@@ -102,7 +104,6 @@ else if (currentPath.startsWith("/ostukorv/ulevaade-ja-maksa")) {
         if (currentTimestamp - data.LastLoadTimestamp <= 5 * 60) {
             insertEmailAddress();
         }
-
     });
 
     function insertEmailAddress() {
