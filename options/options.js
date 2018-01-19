@@ -9,7 +9,8 @@ function saveOptions() {
 		BonusCardNumber: document.getElementById('BonusCardNumber').value,
 		LuxConditionsAccepted: document.getElementById('LuxConditions').checked,
 		TPiletConditionsAccepted: document.getElementById('TPiletConditions').checked,
-        AcceptAdvertisements: document.getElementById('AcceptAdvertisements').checked
+        DeclineAdvertisements: document.getElementById('DeclineAdvertisements').checked,
+        PreferredSeats: document.getElementById('PreferredSeats').value
     }, function() {
     // Update status to let user know options were saved.
     let status = document.getElementById('status');
@@ -31,6 +32,7 @@ function loadOptions() {
 		LuxConditionsAccepted: false,
 		TPiletConditionsAccepted: false,
         AcceptAdvertisements: true,
+        PreferredSeats: ''
     }, function(user) {
 		document.getElementById('FirstName').value = user.FirstName;
 		document.getElementById('LastName').value = user.LastName;
@@ -41,7 +43,8 @@ function loadOptions() {
 		document.getElementById('BonusCardNumber').value = user.BonusCardNumber;
 		document.getElementById('LuxConditions').checked = user.LuxConditionsAccepted;
 		document.getElementById('TPiletConditions').checked = user.TPiletConditionsAccepted;
-        document.getElementById('AcceptAdvertisements').checked = user.AcceptAdvertisements
+        document.getElementById('DeclineAdvertisements').checked = user.DeclineAdvertisements;
+        document.getElementById('PreferredSeats').value = user.PreferredSeats
     });
 }
 

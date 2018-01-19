@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "tpilet ja luxexpress andmesisestaja",
   "short_name": "tpilet",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Laiendus automatiseerib tpilet.ee ja luxexpress.eu pileti ostmisel andmete sisestamise.",
   
   "icons": {

@@ -1,7 +1,7 @@
 const currentPath = window.location.pathname;
 
 // ========== Search results: timetable and prices ==========
-if (currentPath.startsWith("/reiside-soiduplaan")) {
+if (currentPath.startsWith("/reiside-soiduplaan/")) {
     let timetable = document.getElementsByClassName('timetable')[0];
     timetable.addEventListener('mouseup', openTicketView);
 
@@ -31,10 +31,9 @@ else if (currentPath.startsWith("/vali-reisijad/")) {
 
     function reloadButtons() {
         setTimeout(function () {
-            let tables = document.getElementsByClassName("passenger-info");  // Get all passanger-info tables
+            let tables = document.getElementsByClassName("pad-0-0-10");  // Get all ticket-tables
             for (let i = 0; i < tables.length; i++) {  // Loop trough all tables and add button.
                 removeOldButton(tables[i]);
-
                 let button_id = `btn-loadData_${i}`;
                 addNewButton(tables[i], button_id);
                 linkButtonToLoadData(tables[i], button_id);
@@ -74,8 +73,10 @@ else if (currentPath.startsWith("/vali-reisijad/")) {
             PhonePrefix: '',
             PhoneNumber: '',
             DeliverEmailAddress: '',
-            BonusCardNumber: ''
+            BonusCardNumber: '',
+            PreferredSeats: '',
         }, function (data) {
+            selectPreferredSeat(table, data.PreferredSeats);
             insertUserData(table, data);
             confirmPins(table);
             saveTimestamp()
@@ -109,6 +110,80 @@ else if (currentPath.startsWith("/vali-reisijad/")) {
         });
     }
 
+    function selectPreferredSeat(table, seatsPreferred) {
+        if (seatsPreferred !== '') {
+            let seatDivsAll = document.getElementsByClassName("bus-inner")[0]; // dynamic single modal
+            let seatDictFree = createSeatsDictionary(seatDivsAll.querySelectorAll("a.seat:not(.disabled)"));
+
+            let seatArrayPreferred = createPreferredSeatsArray(seatsPreferred, seatDivsAll);
+            let seatBestDiv = getBestSeatDiv(seatArrayPreferred, seatDictFree);
+
+            if (seatBestDiv !== undefined) {
+                changeSelectedSeat(seatBestDiv, table)
+            }
+        }
+    }
+
+    function createSeatsDictionary(seatDivs) {
+        let seatsDict = {};
+        for (let seatDiv of seatDivs) {
+            let seatNr = seatDiv.dataset.seat;
+            seatsDict[seatNr] = seatDiv;
+        }
+        return seatsDict;
+    }
+
+    function createSeatsArray(seatDivs) {
+        let seatsArray = [];
+        for (let seatDiv of seatDivs) {
+            let seatNr = seatDiv.dataset.seat;
+            seatsArray.push(seatNr);
+        }
+        return seatsArray;
+    }
+
+    function createPreferredSeatsArray(seatsPreferredString, seatDivsAll) {
+        let seatNumbersFreeREG = createSeatsArray(seatDivsAll.querySelectorAll("a.seat:not(.vip)"));
+        let seatNumbersFreeVIP = createSeatsArray(seatDivsAll.querySelectorAll("a.seat.vip"));
+        seatsPreferredString = seatsPreferredString.replace("REG", seatNumbersFreeREG.toString());
+        seatsPreferredString = seatsPreferredString.replace("VIP", seatNumbersFreeVIP.toString());
+
+        let seatArrayPreferred = seatsPreferredString.split(",");
+        seatArrayPreferred = seatArrayPreferred.map(function(x) {return x.trim()}); // lambda-trim
+
+        return seatArrayPreferred;
+    }
+
+    function getBestSeatDiv(seatsPreferred, seatsAvailable) {
+        for (let seatPreferred of seatsPreferred) {
+            let seatPreferredInt = parseInt(seatPreferred);
+            let seatPreferredIsFree = seatsAvailable[seatPreferredInt] !== undefined;
+            console.log('seatPreferred:',seatPreferred, 'vaba: ', seatPreferredIsFree);
+            if (seatPreferredIsFree) {
+                return seatsAvailable[seatPreferredInt];
+            }
+        }
+    }
+
+    function changeSelectedSeat(seatBestDiv, table) {
+        let modalWindow = document.getElementsByClassName("modal fade seat-selection")[0];
+        // buttonChangeSeat below will also initiate modalWindow 'display: block'. We don't want to show the modal window.
+        modalWindow.style.visibility = 'hidden';
+
+        let buttonChangeSeat = table.getElementsByClassName("btn btn-light btn-extra-small gray")[0];
+        buttonChangeSeat.click();
+
+        setTimeout(function(){
+            seatBestDiv.click();
+            let btn = document.querySelector("button.btn.btn-primary.confirm");
+            btn.click();
+        }, 1000);
+
+        setTimeout(function(){
+            modalWindow.style.visibility = 'visible' // Enable the user to make the modal window visible again.
+        }, 1500);
+    }
+
     function openOptionsPage() {
         let optionsUrl = chrome.extension.getURL("options/options.html");
         window.open(optionsUrl, "_blank", "width=340,height=340");
@@ -132,7 +207,7 @@ else if (currentPath.startsWith("/ostukorv/ulevaade-ja-maksa")) {
             LastName: '',
             DeliverEmailAddress: '',
             LuxConditionsAccepted: false,
-            AcceptAdvertisements: true,
+            DeclineAdvertisements: true,
         }, function (user) {
             try {
                 if (user.FirstName !== '' && user.LastName !== '') {
@@ -146,12 +221,11 @@ else if (currentPath.startsWith("/ostukorv/ulevaade-ja-maksa")) {
                 document.getElementById('HasAcceptedLicenseAgreement').checked = true;
             }
 
-            if (user.AcceptAdvertisements === false) {
+            if (user.DeclineAdvertisements) {
                 document.getElementById('HasAcceptedEmailAdvertisementBoolean').checked = false;
             }
         });
     }
-
 }
 
 // ========== General functions ==========
