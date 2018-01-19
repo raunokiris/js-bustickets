@@ -1,6 +1,26 @@
 const currentPath = window.location.pathname;
 
-if (currentPath.startsWith("/vali-reisijad/")) {
+// ========== Search results: timetable and prices ==========
+if (currentPath.startsWith("/reiside-soiduplaan")) {
+    let timetable = document.getElementsByClassName('timetable')[0];
+    timetable.addEventListener('mouseup', openTicketView);
+
+    function openTicketView(e) {
+        // If the user clicked the text element, user will be forwarded to the ticket's page.
+        if (e.target.classList.contains('selected-text')) {
+            let buttonOpenTicketView = document.getElementById('js-make-url-and-go-to-checkout');
+            buttonOpenTicketView.click();
+        }
+    }
+
+    // All ticket price cells are appended with text 'Osta'
+    for (let chosenElementText of document.getElementsByClassName('selected-text')) {
+        chosenElementText.textContent += ' ➜ Osta!';
+    }
+}
+
+// ========== Pick seats and enter user data ==========
+else if (currentPath.startsWith("/vali-reisijad/")) {
 
     document.querySelector("[data-bind$=RemovePassenger]").addEventListener('click', reloadButtons);
     document.querySelector("[data-bind$=AddPassenger]").addEventListener('click', reloadButtons);
@@ -63,25 +83,24 @@ if (currentPath.startsWith("/vali-reisijad/")) {
     }
 
     function insertUserData(table, user) {
-        try {
-            if (user.FirstName === '' && user.LastName === '') {
-                openOptionsPage()
-            } else {
-                changeElementValue(table.querySelector("[data-bind$=firstName]"), user.FirstName);
-                changeElementValue(table.querySelector("[data-bind$=lastName]"), user.LastName);
-                changeElementValue(table.querySelector("[data-bind$=BalticMilesNumber]"), user.BonusCardNumber);
-                changeElementValue(table.querySelector("[data-bind^=validationElement]"), user.PhonePrefix);
-                changeElementValue(table.querySelector("[data-bind$=phonePrefix]"), user.PhonePrefix);
-                changeElementValue(table.querySelector("[data-bind$=email]"), user.Email);
-                changeElementValue(table.querySelector("[data-bind$=phoneNumber]"), user.PhoneNumber);
-            }
-        } catch (e) {
-            console.log(e);
+        if (user.FirstName === '' && user.LastName === '') {
+            openOptionsPage()
+        } else {
+            changeElementValue(table.querySelector("[data-bind$=firstName]"), user.FirstName);
+            changeElementValue(table.querySelector("[data-bind$=lastName]"), user.LastName);
+            changeElementValue(table.querySelector("[data-bind$=BalticMilesNumber]"), user.BonusCardNumber);
+            changeElementValue(table.querySelector("[data-bind^=validationElement]"), user.PhonePrefix);
+            changeElementValue(table.querySelector("[data-bind$=phonePrefix]"), user.PhonePrefix);
+            changeElementValue(table.querySelector("[data-bind$=email]"), user.Email);
+            changeElementValue(table.querySelector("[data-bind$=phoneNumber]"), user.PhoneNumber);
         }
     }
 
     function confirmPins(table) {
-        table.querySelector("input.confirm_change").click();
+        let confirmPinsButton = table.querySelector("input.confirm_change");
+        if (confirmPinsButton) {
+            confirmPinsButton.click();
+        }
     }
 
     function saveTimestamp() {
@@ -96,21 +115,24 @@ if (currentPath.startsWith("/vali-reisijad/")) {
     }
 }
 
+// ========== Checkout and pay ==========
 else if (currentPath.startsWith("/ostukorv/ulevaade-ja-maksa")) {
     chrome.storage.sync.get({
         LastLoadTimestamp: 0
     }, function (data) {
         let currentTimestamp = Math.floor(Date.now() / 1000);
         if (currentTimestamp - data.LastLoadTimestamp <= 5 * 60) {
-            insertEmailAddress();
+            loadUserPerferences();
         }
     });
 
-    function insertEmailAddress() {
+    function loadUserPerferences() {
         chrome.storage.sync.get({
             FirstName: '',
             LastName: '',
-            DeliverEmailAddress: ''
+            DeliverEmailAddress: '',
+            LuxConditionsAccepted: false,
+            AcceptAdvertisements: true,
         }, function (user) {
             try {
                 if (user.FirstName !== '' && user.LastName !== '') {
@@ -119,11 +141,23 @@ else if (currentPath.startsWith("/ostukorv/ulevaade-ja-maksa")) {
             } catch (e) {
                 console.log(e);
             }
+
+            if (user.LuxConditionsAccepted) {
+                document.getElementById('HasAcceptedLicenseAgreement').checked = true;
+            }
+
+            if (user.AcceptAdvertisements === false) {
+                document.getElementById('HasAcceptedEmailAdvertisementBoolean').checked = false;
+            }
         });
     }
+
 }
 
+// ========== General functions ==========
 function changeElementValue(el, new_value) {
-    el.value = new_value;
-    el.dispatchEvent(new KeyboardEvent('change', {'key': 'a'}));
+    if (el) {
+        el.value = new_value;
+        el.dispatchEvent(new KeyboardEvent('change', {'key': 'a'}));
+    }
 }

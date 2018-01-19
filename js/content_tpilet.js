@@ -18,10 +18,10 @@ function addNewButton(table, button_id) {
 }
 
 function linkButtonToLoadData(table, button_id) {
-    document.getElementById(button_id).addEventListener('click', function () {insertDataToTable(table);}, false);
+    document.getElementById(button_id).addEventListener('click', function () {insertUserDataToTable(table);}, false);
 }
 
-function insertDataToTable(table) {
+function insertUserDataToTable(table) {
 	chrome.storage.sync.get({
         FirstName: '',
 		LastName: '',
@@ -29,7 +29,8 @@ function insertDataToTable(table) {
 		PhonePrefix: '',
 		PhoneNumber: '',
 		DeliverEmailAddress: '',
-		BonusCardNumber: ''
+		BonusCardNumber: '',
+        TPiletConditionsAccepted: false,
     }, function(user) {
 		try {
             if (user.FirstName === '' && user.LastName === '') {
@@ -42,7 +43,8 @@ function insertDataToTable(table) {
                 table.querySelector("[id$=__Email]").value = user.Email;
                 table.querySelector("[id$=__PhonePrefix]").value = user.PhonePrefix;
                 table.querySelector("[id$=__PhoneNumber]").value = user.PhoneNumber;
-                deletePlaceholdersFromTable(table)
+                deletePlaceholdersFromTable(table);
+                document.getElementById('HasAcceptedLicenseAgreement').checked = user.TPiletConditionsAccepted;
             }
 		} catch (e) {
 			console.log(e);

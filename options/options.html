@@ -15,31 +15,52 @@
 			<table class="userdata" id="input_table">
 				<tr>
 					<td><label for="FirstName">Eesnimi</label></td>
-					<td><input type="text" id="FirstName"></td>
+					<td><input type="text" id="FirstName" placeholder="Eesnimi" autocomplete="given-name"></td>
 				</tr>
 				<tr>
 					<td><label for="LastName">Perenimi</label></td>
-					<td><input type="text" id="LastName"></td>
+					<td><input type="text" id="LastName" placeholder="Perenimi" autocomplete="family-name"></td>
 				</tr>
 				<tr>
 					<td><label for="Email">Email (kontakt)</label></td>
-					<td><input type="text" id="Email"></td>
+					<td><input type="text" id="Email" placeholder="naide.naide@example.com" autocomplete="email"></td>
 				</tr>
 				<tr>
 					<td><label for="PhonePrefix">Tel suunakood</label></td>
-					<td><input type="text" id="PhonePrefix"></td>
+					<td><input type="text" id="PhonePrefix" pattern="^\+\d{1,3}" minlength="2" maxlength="4"placeholder="+372" autocomplete="country-code"></td>
 				</tr>
 				<tr>
 					<td><label for="PhoneNumber">Tel number</label></td>
-					<td><input type="text" id="PhoneNumber"></td>
+					<td><input type="text" id="PhoneNumber" placeholder="55123456"></td>
 				</tr>
 				<tr>
 					<td><label for="DeliverEmailAddress">Email (pileti saatmiseks)</label></td>
-					<td><input type="text" id="DeliverEmailAddress"></td>
+					<td><input type="text" id="DeliverEmailAddress" placeholder="naide.naide@example.com" autocomplete="email"></td>
 				</tr>
 				<tr>
 					<td><label for="BonusCardNumber">PINS kaardi number</label></td>
-					<td><input type="text" id="BonusCardNumber"></td>
+					<td><input type="text" id="BonusCardNumber" placeholder="PINS nr"></td>
+				</tr>
+				<tr>
+					<td>Piletim&uuml;&uuml;gi tingimused</td>
+					<td>
+                        <input type="checkbox" id="LuxConditions">&nbsp;
+                        <label for="LuxConditions" title="Vaikimisi n&otilde;ustu LuxExpressi kasutustingimuste ja eeskirjadega">
+                            <a href="https://luxexpress.eu/et/piletimuugi-reisijate-ja-pagasiveo-eeskirjad" target="_blank">LuxExpress</a> - n&otilde;ustun
+                        </label><br/>
+					    <input type="checkbox" id="TPiletConditions">&nbsp;
+                        <label for="TPiletConditions" title="Vaikimisi n&otilde;ustu T-Pileti kasutustingimuste ja eeskirjadega">
+                            <a href="https://www.tpilet.ee/info/tingimused/" target="_blank">T-Pilet</a> - n&otilde;ustun
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+					<td>Reklaams&otilde;numid</td>
+                    <td>
+                        <input type="checkbox" id="AcceptAdvertisements">&nbsp;
+                        <label for="AcceptAdvertisements" title="Vaikimisi n&otilde;ustu LuxExpressi ja T-Pileti poolt meili teel edastatavate s&otilde;numitega.">Vaikimisi n&otilde;ustu reklaamis&otilde;numitega
+                        </label>
+                    </td>
 				</tr>
 			</table>
 		</fieldset>
