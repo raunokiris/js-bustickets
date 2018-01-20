@@ -32,7 +32,7 @@ function loadOptions() {
 		BonusCardNumber: '',
 		LuxConditionsAccepted: false,
 		TPiletConditionsAccepted: false,
-        AcceptAdvertisements: true,
+        DeclineAdvertisements: false,
         PreferredSeatsVIP: '',
         PreferredSeatsREG: '',
     }, function(user) {
