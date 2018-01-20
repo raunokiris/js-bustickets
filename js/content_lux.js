@@ -74,9 +74,10 @@ else if (currentPath.startsWith("/vali-reisijad/")) {
             PhoneNumber: '',
             DeliverEmailAddress: '',
             BonusCardNumber: '',
-            PreferredSeats: '',
+            PreferredSeatsVIP: '',
+            PreferredSeatsREG: ''
         }, function (data) {
-            selectPreferredSeat(table, data.PreferredSeats);
+            selectPreferredSeat(table, data.PreferredSeatsVIP, data.PreferredSeatsREG);
             insertUserData(table, data);
             confirmPins(table);
             saveTimestamp()
@@ -110,17 +111,25 @@ else if (currentPath.startsWith("/vali-reisijad/")) {
         });
     }
 
-    function selectPreferredSeat(table, seatsPreferred) {
-        if (seatsPreferred !== '') {
-            let seatDivsAll = document.getElementsByClassName("bus-inner")[0]; // dynamic single modal
-            let seatDictFree = createSeatsDictionary(seatDivsAll.querySelectorAll("a.seat:not(.disabled)"));
+    function selectPreferredSeat(table, seatsPreferredVIP, seatsPreferredREG) {
+        let selectedTicketDiv = document.querySelector('select');
+        let selectedTicketType = selectedTicketDiv.options[selectedTicketDiv.selectedIndex].text;
 
-            let seatArrayPreferred = createPreferredSeatsArray(seatsPreferred, seatDivsAll);
-            let seatBestDiv = getBestSeatDiv(seatArrayPreferred, seatDictFree);
+        let seatsAllArrayOfDivs = document.getElementsByClassName("bus-inner")[0]; // dynamic single modal
+        let seatsFreeDictOfDivs = [];
+        let seatArrayPreferred = [];
 
-            if (seatBestDiv !== undefined) {
-                changeSelectedSeat(seatBestDiv, table)
-            }
+        if (selectedTicketType === "Lounge") {
+            seatsFreeDictOfDivs = createSeatsDictionary(seatsAllArrayOfDivs.querySelectorAll("a.seat.vip:not(.disabled)"));
+            seatArrayPreferred = createPreferredSeatsArray(seatsPreferredVIP);
+        } else {
+            seatsFreeDictOfDivs = createSeatsDictionary(seatsAllArrayOfDivs.querySelectorAll("a.seat:not(.disabled):not(.vip)"));
+            seatArrayPreferred = createPreferredSeatsArray(seatsPreferredREG);
+        }
+
+        let seatBestDiv = getBestSeatDiv(seatArrayPreferred, seatsFreeDictOfDivs);
+        if (seatBestDiv !== undefined) {
+            changeSelectedSeat(seatBestDiv, table)
         }
     }
 
@@ -133,24 +142,9 @@ else if (currentPath.startsWith("/vali-reisijad/")) {
         return seatsDict;
     }
 
-    function createSeatsArray(seatDivs) {
-        let seatsArray = [];
-        for (let seatDiv of seatDivs) {
-            let seatNr = seatDiv.dataset.seat;
-            seatsArray.push(seatNr);
-        }
-        return seatsArray;
-    }
-
-    function createPreferredSeatsArray(seatsPreferredString, seatDivsAll) {
-        let seatNumbersFreeREG = createSeatsArray(seatDivsAll.querySelectorAll("a.seat:not(.vip)"));
-        let seatNumbersFreeVIP = createSeatsArray(seatDivsAll.querySelectorAll("a.seat.vip"));
-        seatsPreferredString = seatsPreferredString.replace("REG", seatNumbersFreeREG.toString());
-        seatsPreferredString = seatsPreferredString.replace("VIP", seatNumbersFreeVIP.toString());
-
+    function createPreferredSeatsArray(seatsPreferredString) {
         let seatArrayPreferred = seatsPreferredString.split(",");
         seatArrayPreferred = seatArrayPreferred.map(function(x) {return x.trim()}); // lambda-trim
-
         return seatArrayPreferred;
     }
 
@@ -158,7 +152,7 @@ else if (currentPath.startsWith("/vali-reisijad/")) {
         for (let seatPreferred of seatsPreferred) {
             let seatPreferredInt = parseInt(seatPreferred);
             let seatPreferredIsFree = seatsAvailable[seatPreferredInt] !== undefined;
-            console.log('seatPreferred:',seatPreferred, 'vaba: ', seatPreferredIsFree);
+            console.log('seatPreferred:',seatPreferred, 'available: ', seatPreferredIsFree);
             if (seatPreferredIsFree) {
                 return seatsAvailable[seatPreferredInt];
             }
@@ -192,6 +186,9 @@ else if (currentPath.startsWith("/vali-reisijad/")) {
 
 // ========== Checkout and pay ==========
 else if (currentPath.startsWith("/ostukorv/ulevaade-ja-maksa")) {
+    let buttonShowShoppingcartContents = document.getElementsByClassName('hideTrips')[0];
+    buttonShowShoppingcartContents.click();
+
     chrome.storage.sync.get({
         LastLoadTimestamp: 0
     }, function (data) {

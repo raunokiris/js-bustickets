@@ -23,19 +23,19 @@
 				</tr>
 				<tr>
 					<td><label for="Email">Email (kontakt)</label></td>
-					<td><input type="text" id="Email" placeholder="naide.naide@example.com" autocomplete="email"></td>
+					<td><input type="text" id="Email" placeholder="nt: naide.naide@example.com" autocomplete="email"></td>
 				</tr>
 				<tr>
 					<td><label for="PhonePrefix">Tel suunakood</label></td>
-					<td><input type="text" id="PhonePrefix" pattern="^\+\d{1,3}" minlength="2" maxlength="4"placeholder="+372" autocomplete="country-code"></td>
+					<td><input type="text" id="PhonePrefix" pattern="^\+\d{1,3}" minlength="2" maxlength="4" placeholder="+372" autocomplete="country-code"></td>
 				</tr>
 				<tr>
 					<td><label for="PhoneNumber">Tel number</label></td>
-					<td><input type="text" id="PhoneNumber" placeholder="55123456"></td>
+					<td><input type="text" id="PhoneNumber" placeholder="nt: 55123456"></td>
 				</tr>
 				<tr>
 					<td><label for="DeliverEmailAddress">Email (pileti saatmiseks)</label></td>
-					<td><input type="text" id="DeliverEmailAddress" placeholder="naide.naide@example.com" autocomplete="email"></td>
+					<td><input type="text" id="DeliverEmailAddress" placeholder="nt: naide.naide@example.com" autocomplete="email"></td>
 				</tr>
 				<tr>
 					<td><label for="BonusCardNumber">PINS kaardi number</label></td>
@@ -63,9 +63,19 @@
                     </td>
 				</tr>
                 <tr>
-                    <td><label for="PreferredSeats" title="Loetelu eelistatud istekohtadest, eralda komaga; kasutada saab ka 'VIP' (lounge) või 'REG' (tavakohad)">Eelistatud istekohad</label></td>
-                    <td><input type="text" id="PreferredSeats" placeholder="38, 41, 44, 47, VIP, 15, REG"></td>
+                    <td>Eelist. istekohad</td>
+                    <td></td>
                 </tr>
+                <tr>
+                    <td style="text-align:right"><label for="PreferredSeatsVIP" title="Loetelu eelistatud Lounge-istekohtadest, eralda komaga">Lounge:</label></td>
+                    <td><input type="text" id="PreferredSeatsVIP" placeholder="nt: 38, 41, 45"></td>
+                </tr>
+                <tr>
+                    <td style="text-align:right"><label for="PreferredSeatsREG" title="Loetelu eelistatud istekohtadest, eralda komaga">Tavakohad:</label>
+                    <td><input type="text" id="PreferredSeatsREG" placeholder="nt: 1, 2, 15, 42"></td>
+                </tr>
+
+
             </table>
 		</fieldset>
 	</form>
